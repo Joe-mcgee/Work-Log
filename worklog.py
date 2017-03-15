@@ -1,7 +1,4 @@
-# add entry or lookup Entry
-# provide task name, number of minutes spent, additional notes
-# write to a csv file  
-# find by date, time spend, exact search, by pattern 
+
 import csv
 import os.path
 import datetime
