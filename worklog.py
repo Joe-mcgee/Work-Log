@@ -61,8 +61,7 @@ def add_entry():
         
     while True:
         try:
-            str_time = input('How long was spent on such task (minutes)?: ')
-            time = int(str_time)
+            time = input('How long was spent on such task (minutes)?: ')
             validator = input("Is '{}' minutes correct? (Y, N): ".format(time))
             validator.upper()
             if validator not in VALIDATOR:
@@ -122,40 +121,23 @@ def add_entry():
     if date_check == 'N':
         while True:
             try:
-                year = int(input('What year was this work performed?: '))
-                year_check = input("is '{}' correct?: (Y/N): ".format(year))
-                if year_check not in VALIDATOR:
-                    raise ValueError
-            except (ValueError, TypeError):
-                print('please type in the correct year')
+                print('When was this Work Completed?')
+                date = input('type in as YYYY/MM/DD: ')
+                date_list = date.split('/')
+                year= int(date_list[0])
+                month = int(date_list[1])
+                day = int(date_list[2])
+                date_check = datetime.datetime(year=year, month=month, day=day)
                 
-            else:
-                break
             
-        while True:
-            try:
-                month = int(input('What month was this work performed? (as number): '))
-                month_check = input("is '{}' the correct month?: (Y/N) ".format(month))
-                if month_check not in VALIDATOR:
-                    raise ValueError
             except (ValueError, TypeError):
-                print('please input the correct Month')
+                print('Please select a valid date in form YYYY/MM/DD')
                 
             else:
                 break
         
-        while True:
-            try:
-                day = int(input('What day was this work performed? (as number): '))
-                day_check = input("is '{}' the correct day?: (Y/N) ".format(day))
-                if day_check not in VALIDATOR:
-                    raise ValueError
-            except (ValueError, TypeError):
-                print('please input the correct Day')
-                
-            else:
-                break
-                    
+        
+                           
         str_date= '{}-{}-{}'.format(year, month, day)
         my_date = datetime.date(*[int(i) for i in str_date.split('-')])
         date = my_date.strftime('%Y/%m/%d')
@@ -221,19 +203,21 @@ def search_entries():
         while True:
             try:
                 print('How long was the time spent on the log your looking for?')
-                time = int(input('Type a time in minutes: '))
+                time = input('Type a time in minutes: ')
+            
                 
             except (TypeError, ValueError):
                 print('please select a valid time in minutes')
             
             else:
                 break
-            
+        
         with open('Work_log.csv', 'r') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 if row['Time Spent'] == time:
                     print(row)
+                
                     
     if choice == 'E':
         while True:
@@ -257,30 +241,30 @@ def search_entries():
                     print(row)
                     
     if choice == 'P':
+        results = []
+        clean_results = []
         file = open('Work_log.csv')
         data = file.read()
         file.close()
         
-        while True:
-            try:
-                print('Please input a regular expression to search for')
-                reg_ex = input('What is the patter your looking for?: ')   
-                with open('Work_log.csv', 'r') as csvfile:
-                    reader = csv.DictReader(csvfile)
-                    for row in reader:
-                        search = re.findall(reg_ex, data)
-                        if search:
-                            print(row)
-                       
-                
-            except(ValueError, re.error):
-                print('please input a valid Regular Expression')
-            
-            else:
-                break
-       
-       
-                        
+        print('Please input a regular expression to search for')
+        reg_ex = input('What is the patter your looking for?: ')   
+        with open('Work_log.csv', 'r') as csvfile:
+            reader = csv.DictReader(csvfile)
+            search = re.findall(reg_ex, data)
+            for item in search:
+                for row in reader:
+                    for key, value in row.items():
+                        if item in value:
+                            results.append(row)
+        
+        for result in results:
+            if result not in clean_results:
+                clean_results.append(result)
+        
+        for clean_result in clean_results:
+            print(clean_result)                 
+                            
     menu()
 
 
