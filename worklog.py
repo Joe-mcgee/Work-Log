@@ -227,6 +227,13 @@ def search_entries():
                 validator = input('is {} what you would like to search for? (Y/N): '.format(search))
                 if validator not in VALIDATOR:
                     raise ValueError
+                with open('Work_log.csv', 'r') as csvfile:
+                    reader = csv.DictReader(csvfile)
+                    for row in reader:
+                        for key, value in row.items():
+                            if value == search:
+                                print(row)
+                
                 
             except ValueError:
                 print('What would you like to search for?')
@@ -234,11 +241,7 @@ def search_entries():
             else:
                 break
             
-        with open('Work_log.csv', 'r') as csvfile:
-            reader = csv.DictReader(csvfile)
-            for row in reader:
-                if search in row:
-                    print(row)
+        
                     
     if choice == 'P':
         results = []
